@@ -12,6 +12,8 @@ public class TrashtalkManager : MonoBehaviour
         public string name = "Stage 1";
         public List<VideoClip> m_VideoList;   
     }
+    delegate void Trashtalk();
+    Trashtalk m_Trashtalk;
 
     [SerializeField] private List<StageClass> m_StageList;
     [SerializeField] private int m_CurrentVideo; // A video to set in the VideoPlayers
@@ -20,19 +22,32 @@ public class TrashtalkManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+       
+    }
+
+    public void OnMiss()
+    {
+        m_Trashtalk += PlayRandomTrashtalk;
+    }
+
+    public void OnRingshot()
+    {
+        m_Trashtalk -= PlayRandomTrashtalk;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) // Remove this if code is done
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            PlayRandomTrashtalk();
+           OnMiss();
+           m_Trashtalk();
         }
     }
 
-    public void PlayRandomTrashtalk()
+
+
+    void PlayRandomTrashtalk()
     {
         m_CurrentVideo = Random.Range(0, m_StageList[m_GameMgr.currentlevel].m_VideoList.Count); //Randomize to get the CurrentVideo Trashtalk
         for (int i = 0; i < m_VideoPlayer.Length; i++) //Check the number of VideoPlayer
