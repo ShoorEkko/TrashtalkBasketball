@@ -59,7 +59,7 @@ public class GameMgr : MonoBehaviour {
 	
 	public bool hidefakeball=false;
 	
-	private int currentlevel=0;
+	[HideInInspector] public int currentlevel=0;
 
 	private bool istimeout=false;
 
