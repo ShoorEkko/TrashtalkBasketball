@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class GameMgr : MonoBehaviour {
-
+	[SerializeField] private bool IsProduction;
 	public GameObject shooterCam;
 	public GameObject centerobject;
 	public GameObject shooter;
@@ -153,9 +153,11 @@ public class GameMgr : MonoBehaviour {
 		gameoverPanel.SetActive (true);
 
 		//show full ad here
+		if(IsProduction == true)
+        {
+			AdManager.Instance.LoadInterstitialAd();
+        }
 		yield return new WaitForSeconds(0.5f);
-
-		
 	}
 
 	IEnumerator  PrepareLevelUP (){
@@ -176,6 +178,7 @@ public class GameMgr : MonoBehaviour {
 		shooterCam.GetComponent<Shooter> ().hideFakeBasketBall ();
 		AudioSource.PlayClipAtPoint(gameoverSound, gameObject.transform.position);
 		StartCoroutine(PrepareGameoverAD ());
+		AdManager.Instance.ShowAd();
 	}
 
 
