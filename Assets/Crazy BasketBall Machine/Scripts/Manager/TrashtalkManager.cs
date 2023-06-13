@@ -78,6 +78,9 @@ public class TrashtalkManager : MonoBehaviour
         m_CurrentVideo = Random.Range(0, m_StageList[m_GameMgr.currentlevel].m_VideoList.Count); //Randomize to get the CurrentVideo Trashtalk
         for (int i = 0; i < m_VideoPlayer.Length; i++) //Check the number of VideoPlayer
         {
+            if(m_VideoPlayer[i].isPlaying)
+                return;
+
             m_VideoPlayer[i].clip = m_StageList[m_GameMgr.currentlevel].m_VideoList[m_CurrentVideo]; // set the Clips of the videoplayer depending on the current stage of the player
             m_VideoPlayer[i].Play();
         }
