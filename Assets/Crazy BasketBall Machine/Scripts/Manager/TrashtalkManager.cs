@@ -22,17 +22,23 @@ public class TrashtalkManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+       PlayRandomTrashtalk();
+    }
+
+    public void OnStart()
+    {
+
     }
 
     public void OnMiss()
     {
-        m_Trashtalk += PlayRandomTrashtalk;
+        if (m_Trashtalk != null)
+            m_Trashtalk += PlayRandomTrashtalk;
     }
 
     public void OnRingshot()
     {
-        m_Trashtalk -= PlayRandomTrashtalk;
+        
     }
 
     // Update is called once per frame
@@ -40,8 +46,7 @@ public class TrashtalkManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-           OnMiss();
-           m_Trashtalk();
+           //insert trashtalk here to test  
         }
     }
 
