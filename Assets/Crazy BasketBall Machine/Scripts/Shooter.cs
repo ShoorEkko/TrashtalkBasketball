@@ -130,8 +130,7 @@ public class Shooter : MonoBehaviour {
 		float elapseTime = Time.time - startTime;
 
 		if (Input.GetMouseButtonUp (0)) {
-
-				ShootBall(elapseTime);
+			ShootBall(elapseTime);
 
 			Invoke ("setStatetoPrepare", 1);
 
@@ -152,11 +151,9 @@ public class Shooter : MonoBehaviour {
 	
 
 	void ShootBall (float elapseTime) {
-
 		FakeBasketBall.SetActive (false);
 
 		if (objBall == null) {
-			
 			if (!gamemanagerscript.islastshot)
 				objBall= Instantiate (ballPrefab, FakeBasketBall.transform.position,Quaternion.identity) as GameObject;
 
@@ -182,8 +179,6 @@ public class Shooter : MonoBehaviour {
 		}
 
 
-
-
 		Vector3 screenPoint = Input.mousePosition;
 		screenPoint.z = targetZ;
 		Vector3 worldPoint = cameraForShooter.ScreenToWorldPoint (screenPoint);
@@ -197,7 +192,6 @@ public class Shooter : MonoBehaviour {
 
 
 		if (gamemanagerscript.islastshot) {
-
 			rootscript.setTarget (objBall.transform);
 
 			gamemanagerscript.LastShotDone();

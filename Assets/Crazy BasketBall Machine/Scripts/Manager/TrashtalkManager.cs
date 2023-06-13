@@ -12,44 +12,65 @@ public class TrashtalkManager : MonoBehaviour
         public string name = "Stage 1";
         public List<VideoClip> m_VideoList;   
     }
+
     delegate void Trashtalk();
     Trashtalk m_Trashtalk;
 
+    private static TrashtalkManager instance;
+
+    [SerializeField] private float m_Timer;
     [SerializeField] private List<StageClass> m_StageList;
     [SerializeField] private int m_CurrentVideo; // A video to set in the VideoPlayers
     [SerializeField] VideoPlayer[] m_VideoPlayer;
     [SerializeField] GameMgr m_GameMgr; // Game Manager
-    // Start is called before the first frame update
-    void Start()
+
+    private void Awake()
     {
-       PlayRandomTrashtalk();
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+        m_Trashtalk += PlayRandomTrashtalk;
     }
+
+    public static TrashtalkManager Instance
+    {
+        get { return instance; }
+    }
+
 
     public void OnStart()
     {
-
+        m_Trashtalk();
     }
 
-    public void OnMiss()
+    public void OnMiss() // Setting a timer if ball went in or not during shooting
     {
-        if (m_Trashtalk != null)
-            m_Trashtalk += PlayRandomTrashtalk;
+        for (int i = 0; i < m_VideoPlayer.Length; i++) //This checks if theres a video currently playing
+        {
+            if (m_Trashtalk != null)
+                m_Trashtalk();
+        }
     }
 
     public void OnRingshot()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
+        for (int i = 0; i < m_VideoPlayer.Length; i++) //This checks if theres a video currently playing
         {
-           //insert trashtalk here to test  
+            m_VideoPlayer[i].loopPointReached += OnVideoFinished;
         }
     }
 
+    void OnVideoFinished(VideoPlayer videoPlayer)
+    {
+        // Do something when the video finishes playing
+        if (m_Trashtalk != null)
+            m_Trashtalk();
+    }
 
 
     void PlayRandomTrashtalk()

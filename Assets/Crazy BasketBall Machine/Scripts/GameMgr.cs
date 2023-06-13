@@ -90,7 +90,7 @@ public class GameMgr : MonoBehaviour {
 		bestscoretext.text = "Best: " + best.ToString ();
 		goalholderscript = GoalHolder.GetComponent<AutoMoveAndRotate> ();
 
-
+		TrashtalkManager.Instance.OnStart();
 
 	}
 	
@@ -381,6 +381,7 @@ public class GameMgr : MonoBehaviour {
 		canswitchpoint = true;
 		hidefakeball = false;
 
+		TrashtalkManager.Instance.OnStart();
 	
 
 
