@@ -19,11 +19,12 @@ public class TrashtalkManager : MonoBehaviour
     private static TrashtalkManager instance;
 
     private int m_LastPlayedVideoIndex = -1;
+    private int m_CurrentPlayerIndex = 0; // Track the current player index
 
     [SerializeField] private int m_CurrentVideo; // A video to set in the VideoPlayers
     [SerializeField] private List<StageClass> m_StageList;
-    [SerializeField] VideoPlayer[] m_VideoPlayer;
-    [SerializeField] GameMgr m_GameMgr; // Game Manager
+    [SerializeField] private VideoPlayer[] m_VideoPlayer;
+    [SerializeField] private GameMgr m_GameMgr; // Game Manager
 
     private List<int> m_PlayedVideos = new List<int>(); // Track the played videos
     private List<int> m_RemainingVideos = new List<int>(); // Track the remaining videos
@@ -48,66 +49,96 @@ public class TrashtalkManager : MonoBehaviour
 
     public void OnStart()
     {
+        for (int i = 0; i < m_VideoPlayer.Length; i++)
+        {
+            m_VideoPlayer[i].gameObject.SetActive(false);
+        }
+
         m_Trashtalk();
     }
 
-    public void OnMiss() // Setting a timer if ball went in or not during shooting
+    public void OnMiss()
     {
-        for (int i = 0; i < m_VideoPlayer.Length; i++) //This checks if there's a video currently playing
+        for (int i = 0; i < m_VideoPlayer.Length; i++)
         {
-            if (m_Trashtalk != null)
-                m_Trashtalk();
+            if (m_VideoPlayer[i].isPlaying)
+                return;
         }
-    }
 
-    public void OnRingshot()
-    {
-        for (int i = 0; i < m_VideoPlayer.Length; i++) //This checks if there's a video currently playing
-        {
-            if (m_Trashtalk != null)
-                m_Trashtalk();
-        }
-    }
-
-    void OnVideoFinished(VideoPlayer videoPlayer)
-    {
-        // Do something when the video finishes playing
         if (m_Trashtalk != null)
             m_Trashtalk();
     }
 
     void PlayRandomTrashtalk()
-{
-    if (m_RemainingVideos.Count == 0)
     {
-        ResetPlayedVideos();
-        ShuffleRemainingVideos();
+        if (m_RemainingVideos.Count == 0)
+        {
+            ResetPlayedVideos();
+            ShuffleRemainingVideos();
+        }
+
+        int randomIndex = Random.Range(0, m_RemainingVideos.Count);
+
+        m_CurrentVideo = m_RemainingVideos[randomIndex];
+        m_RemainingVideos.RemoveAt(randomIndex);
+        m_PlayedVideos.Add(m_CurrentVideo);
+
+        if (m_CurrentVideo != m_LastPlayedVideoIndex)
+        {
+            m_LastPlayedVideoIndex = m_CurrentVideo;
+
+            StartCoroutine(PlayVideoOnAvailablePlayer());
+        }
+        else
+        {
+            PlayRandomTrashtalk();
+        }
     }
 
-    int randomIndex = Random.Range(0, m_RemainingVideos.Count);
-    m_CurrentVideo = m_RemainingVideos[randomIndex];
-    m_RemainingVideos.RemoveAt(randomIndex);
-    m_PlayedVideos.Add(m_CurrentVideo);
-
-    // Check if the current video was the last played video
-    if (m_CurrentVideo != m_LastPlayedVideoIndex)
+    IEnumerator PlayVideoOnAvailablePlayer()
     {
-        m_LastPlayedVideoIndex = m_CurrentVideo;
+        // Wait until there is an available VideoPlayer
+        while (IsAnyPlayerPlaying())
+        {
+            yield return null;
+        }
 
+        VideoPlayer currentPlayer = m_VideoPlayer[m_CurrentPlayerIndex];
+
+        currentPlayer.gameObject.SetActive(true);
+        currentPlayer.clip = m_StageList[m_GameMgr.currentlevel].m_VideoList[m_CurrentVideo];
+        currentPlayer.Prepare();
+
+        yield return new WaitUntil(() => currentPlayer.isPrepared);
+
+        currentPlayer.Play();
+
+        yield return new WaitUntil(() => !currentPlayer.isPlaying);
+
+        currentPlayer.Stop();
+        currentPlayer.gameObject.SetActive(false);
+
+        // Increment the player index for the next video
+        m_CurrentPlayerIndex = (m_CurrentPlayerIndex + 1) % m_VideoPlayer.Length;
+
+        if (m_VideoPlayer[m_CurrentPlayerIndex].isPlaying || IsAnyPlayerPlaying())
+        {
+            // If any player is still playing, play the next video
+            PlayRandomTrashtalk();
+        }
+    }
+
+    bool IsAnyPlayerPlaying()
+    {
         for (int i = 0; i < m_VideoPlayer.Length; i++)
         {
             if (m_VideoPlayer[i].isPlaying)
-                return;
-
-            m_VideoPlayer[i].clip = m_StageList[m_GameMgr.currentlevel].m_VideoList[m_CurrentVideo];
-            m_VideoPlayer[i].Play();
+            {
+                return true;
+            }
         }
+        return false;
     }
-    else
-    {
-        PlayRandomTrashtalk(); // Call the method again to select a different video
-    }
-}
 
     void ResetPlayedVideos()
     {

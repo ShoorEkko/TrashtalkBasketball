@@ -16,7 +16,10 @@ public class Shooter : MonoBehaviour {
 	private float offsetY = 100.0f;			//offset Y for trajectory
 	private float shotTimeMin = 0.2f;		//minimum time till to release finger
 	private float shotTimeMax = 0.55f;		//maximum time till to release finger
-	private float torque = 30.0f;			//torque (backspin)
+	private float torque = 30.0f;           //torque (backspin)
+
+	private float shotTimer = 5f;
+	private float currentTime;
 
 
 
@@ -56,7 +59,7 @@ public class Shooter : MonoBehaviour {
 
 		rootscript = root.GetComponent<CamFollow> ();
 
-	
+		currentTime = shotTimer;
 	}
 
 
@@ -69,13 +72,24 @@ public class Shooter : MonoBehaviour {
 
 		} else if (state == ShotState.Ready) {
 			CheckTrigger();
+			TrashTalkIdle();
+
 
 		} else if (state == ShotState.DirectionAndPower) {
 			CheckShot();
 		}
 	}
 
-
+	void TrashTalkIdle()
+    {
+		if (currentTime > 0 && state == ShotState.Ready)
+			currentTime -= Time.deltaTime;
+		else
+        {
+			TrashtalkManager.Instance.OnMiss();
+			currentTime = shotTimer;
+        }
+    }
 
 	
 	void ChargeBall () {
