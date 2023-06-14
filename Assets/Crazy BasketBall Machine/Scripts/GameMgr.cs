@@ -161,22 +161,16 @@ public class GameMgr : MonoBehaviour {
 	}
 
 	IEnumerator  PrepareLevelUP (){
-		
-		
 		levelupPanel.SetActive (true);
-
 		//show full ad here
 		yield return new WaitForSeconds(0.5f);
-
-		
-		
 	}
 	
-	private void  Gameover (){
-		
+	private void Gameover (){
 		hidefakeball = true;
 		shooterCam.GetComponent<Shooter> ().hideFakeBasketBall ();
 		AudioSource.PlayClipAtPoint(gameoverSound, gameObject.transform.position);
+		AnalyticsManager.Instance.OnLevelComplete(currentlevel+1 ,score);
 		StartCoroutine(PrepareGameoverAD ());
 		AdManager.Instance.ShowAd();
 	}

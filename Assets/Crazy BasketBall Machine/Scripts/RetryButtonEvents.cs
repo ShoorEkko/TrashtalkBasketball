@@ -10,7 +10,7 @@ public class RetryButtonEvents : MonoBehaviour
 	{
 	
 	
-
+		AnalyticsManager.Instance.OnReplayGame();
 		SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex);
 	}
 
