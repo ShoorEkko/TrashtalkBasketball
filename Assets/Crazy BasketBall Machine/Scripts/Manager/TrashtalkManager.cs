@@ -10,7 +10,7 @@ public class TrashtalkManager : MonoBehaviour
     public class StageClass
     {
         public string name = "Stage 1";
-        public List<VideoClip> m_VideoList;   
+        public List<VideoClip> m_VideoList;
     }
 
     delegate void Trashtalk();
@@ -18,11 +18,15 @@ public class TrashtalkManager : MonoBehaviour
 
     private static TrashtalkManager instance;
 
-    [SerializeField] private float m_Timer;
-    [SerializeField] private List<StageClass> m_StageList;
+    private int m_LastPlayedVideoIndex = -1;
+
     [SerializeField] private int m_CurrentVideo; // A video to set in the VideoPlayers
+    [SerializeField] private List<StageClass> m_StageList;
     [SerializeField] VideoPlayer[] m_VideoPlayer;
     [SerializeField] GameMgr m_GameMgr; // Game Manager
+
+    private List<int> m_PlayedVideos = new List<int>(); // Track the played videos
+    private List<int> m_RemainingVideos = new List<int>(); // Track the remaining videos
 
     private void Awake()
     {
@@ -42,7 +46,6 @@ public class TrashtalkManager : MonoBehaviour
         get { return instance; }
     }
 
-
     public void OnStart()
     {
         m_Trashtalk();
@@ -50,7 +53,7 @@ public class TrashtalkManager : MonoBehaviour
 
     public void OnMiss() // Setting a timer if ball went in or not during shooting
     {
-        for (int i = 0; i < m_VideoPlayer.Length; i++) //This checks if theres a video currently playing
+        for (int i = 0; i < m_VideoPlayer.Length; i++) //This checks if there's a video currently playing
         {
             if (m_Trashtalk != null)
                 m_Trashtalk();
@@ -59,9 +62,10 @@ public class TrashtalkManager : MonoBehaviour
 
     public void OnRingshot()
     {
-        for (int i = 0; i < m_VideoPlayer.Length; i++) //This checks if theres a video currently playing
+        for (int i = 0; i < m_VideoPlayer.Length; i++) //This checks if there's a video currently playing
         {
-            m_VideoPlayer[i].loopPointReached += OnVideoFinished;
+            if (m_Trashtalk != null)
+                m_Trashtalk();
         }
     }
 
@@ -72,17 +76,56 @@ public class TrashtalkManager : MonoBehaviour
             m_Trashtalk();
     }
 
-
     void PlayRandomTrashtalk()
     {
-        m_CurrentVideo = Random.Range(0, m_StageList[m_GameMgr.currentlevel].m_VideoList.Count); //Randomize to get the CurrentVideo Trashtalk
-        for (int i = 0; i < m_VideoPlayer.Length; i++) //Check the number of VideoPlayer
+        if (m_RemainingVideos.Count == 0)
         {
-            if(m_VideoPlayer[i].isPlaying)
-                return;
+            ResetPlayedVideos();
+            ShuffleRemainingVideos();
+        }
 
-            m_VideoPlayer[i].clip = m_StageList[m_GameMgr.currentlevel].m_VideoList[m_CurrentVideo]; // set the Clips of the videoplayer depending on the current stage of the player
-            m_VideoPlayer[i].Play();
+        int randomIndex = Random.Range(0, m_RemainingVideos.Count);
+        m_CurrentVideo = m_RemainingVideos[randomIndex];
+        m_RemainingVideos.RemoveAt(randomIndex);
+        m_PlayedVideos.Add(m_CurrentVideo);
+
+        // Check if the current video was the last played video
+        if (m_CurrentVideo != m_LastPlayedVideoIndex)
+        {
+            m_LastPlayedVideoIndex = m_CurrentVideo;
+
+            for (int i = 0; i < m_VideoPlayer.Length; i++)
+            {
+                if (m_VideoPlayer[i].isPlaying)
+                    return;
+
+                m_VideoPlayer[i].clip = m_StageList[m_GameMgr.currentlevel].m_VideoList[m_CurrentVideo];
+                m_VideoPlayer[i].Play();
+            }
+        }
+        else
+        {
+            PlayRandomTrashtalk(); // Call the method again to select a different video
+        }
+    }
+
+    void ResetPlayedVideos()
+    {
+        m_PlayedVideos.Clear();
+        for (int i = 0; i < m_StageList[m_GameMgr.currentlevel].m_VideoList.Count; i++)
+        {
+            m_RemainingVideos.Add(i);
+        }
+    }
+
+    void ShuffleRemainingVideos()
+    {
+        for (int i = 0; i < m_RemainingVideos.Count; i++)
+        {
+            int temp = m_RemainingVideos[i];
+            int randomIndex = Random.Range(i, m_RemainingVideos.Count);
+            m_RemainingVideos[i] = m_RemainingVideos[randomIndex];
+            m_RemainingVideos[randomIndex] = temp;
         }
     }
 }
