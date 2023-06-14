@@ -77,37 +77,37 @@ public class TrashtalkManager : MonoBehaviour
     }
 
     void PlayRandomTrashtalk()
+{
+    if (m_RemainingVideos.Count == 0)
     {
-        if (m_RemainingVideos.Count == 0)
+        ResetPlayedVideos();
+        ShuffleRemainingVideos();
+    }
+
+    int randomIndex = Random.Range(0, m_RemainingVideos.Count);
+    m_CurrentVideo = m_RemainingVideos[randomIndex];
+    m_RemainingVideos.RemoveAt(randomIndex);
+    m_PlayedVideos.Add(m_CurrentVideo);
+
+    // Check if the current video was the last played video
+    if (m_CurrentVideo != m_LastPlayedVideoIndex)
+    {
+        m_LastPlayedVideoIndex = m_CurrentVideo;
+
+        for (int i = 0; i < m_VideoPlayer.Length; i++)
         {
-            ResetPlayedVideos();
-            ShuffleRemainingVideos();
-        }
+            if (m_VideoPlayer[i].isPlaying)
+                return;
 
-        int randomIndex = Random.Range(0, m_RemainingVideos.Count);
-        m_CurrentVideo = m_RemainingVideos[randomIndex];
-        m_RemainingVideos.RemoveAt(randomIndex);
-        m_PlayedVideos.Add(m_CurrentVideo);
-
-        // Check if the current video was the last played video
-        if (m_CurrentVideo != m_LastPlayedVideoIndex)
-        {
-            m_LastPlayedVideoIndex = m_CurrentVideo;
-
-            for (int i = 0; i < m_VideoPlayer.Length; i++)
-            {
-                if (m_VideoPlayer[i].isPlaying)
-                    return;
-
-                m_VideoPlayer[i].clip = m_StageList[m_GameMgr.currentlevel].m_VideoList[m_CurrentVideo];
-                m_VideoPlayer[i].Play();
-            }
-        }
-        else
-        {
-            PlayRandomTrashtalk(); // Call the method again to select a different video
+            m_VideoPlayer[i].clip = m_StageList[m_GameMgr.currentlevel].m_VideoList[m_CurrentVideo];
+            m_VideoPlayer[i].Play();
         }
     }
+    else
+    {
+        PlayRandomTrashtalk(); // Call the method again to select a different video
+    }
+}
 
     void ResetPlayedVideos()
     {

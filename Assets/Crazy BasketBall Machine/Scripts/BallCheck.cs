@@ -9,12 +9,7 @@ public class BallCheck : MonoBehaviour
     [SerializeField] private bool m_hasTrashTalked = false;
     // Start is called before the first frame update
 
-    private void Awake()
-    {
-        TrashtalkManager.Instance.OnRingshot();
-    }
-
-    void Start()
+    void Start() // This script is attached to Basketball Prefab
     {
         Destroy(gameObject, 15);
         currentTimer = m_Timer;
