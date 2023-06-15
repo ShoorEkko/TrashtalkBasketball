@@ -97,14 +97,14 @@ public class AdManager : MonoBehaviour
     /// </summary>
     public void ShowAd()
     {
-        // if (interstitialAd != null && interstitialAd.CanShowAd())
-        // {
-        //     Debug.Log("Showing interstitial ad.");
-        //     interstitialAd.Show();
-        // }
-        // else
-        // {
-        //     Debug.LogError("Interstitial ad is not ready yet.");
-        // }
+        if (interstitialAd != null && interstitialAd.CanShowAd())
+        {
+            Debug.Log("Showing interstitial ad.");
+            interstitialAd.Show();
+        }
+        else
+        {
+            Debug.LogError("Interstitial ad is not ready yet.");
+        }
     }
 }

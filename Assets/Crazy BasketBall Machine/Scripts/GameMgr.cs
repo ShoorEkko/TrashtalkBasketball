@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class GameMgr : MonoBehaviour {
-	[SerializeField] private bool IsProduction;
 	public GameObject shooterCam;
 	public GameObject centerobject;
 	public GameObject shooter;
@@ -153,10 +152,8 @@ public class GameMgr : MonoBehaviour {
 		gameoverPanel.SetActive (true);
 
 		//show full ad here
-		if(IsProduction == true)
-        {
-			AdManager.Instance.LoadInterstitialAd();
-        }
+		AdManager.Instance.LoadInterstitialAd();
+		AdManager.Instance.ShowAd();
 		yield return new WaitForSeconds(0.5f);
 	}
 
@@ -172,7 +169,7 @@ public class GameMgr : MonoBehaviour {
 		AudioSource.PlayClipAtPoint(gameoverSound, gameObject.transform.position);
 		AnalyticsManager.Instance.OnLevelComplete(currentlevel+1 ,score);
 		StartCoroutine(PrepareGameoverAD ());
-		AdManager.Instance.ShowAd();
+
 	}
 
 
