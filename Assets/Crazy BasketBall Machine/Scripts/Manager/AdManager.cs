@@ -45,6 +45,7 @@ public class AdManager : MonoBehaviour
 
     void Start()
     {
+        CheckStage();
         // Initialize the Google Mobile Ads SDK.
         MobileAds.Initialize((InitializationStatus initStatus) =>
         {
@@ -56,6 +57,24 @@ public class AdManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void CheckStage()
+    {
+        string bundleIdentifier = Application.identifier;
+
+        if (bundleIdentifier.Contains("staging"))
+        {
+            _adUnitId = "ca-app-pub-3940256099942544/1033173712";
+        }
+        else if (bundleIdentifier.Contains("production"))
+        {
+            _adUnitId = "ca-app-pub-1294444334428285~4792466878";
+        }
+        else
+        {
+            Debug.Log("Game environment is undefined.");
+        }
     }
 
     public void LoadInterstitialAd()
