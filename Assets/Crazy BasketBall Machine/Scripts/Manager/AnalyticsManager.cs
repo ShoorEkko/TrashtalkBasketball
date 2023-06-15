@@ -45,7 +45,6 @@ public class AnalyticsManager : MonoBehaviour
                 
             };
         AnalyticsService.Instance.CustomData("level_completed", parameters);
-        AnalyticsService.Instance.Flush();
         Debug.Log($"Level Completed: {currentLevel}");
     }
     #endregion
