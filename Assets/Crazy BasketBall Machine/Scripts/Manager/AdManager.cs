@@ -10,9 +10,11 @@ public class AdManager : MonoBehaviour
 
     // These ad units are configured to always serve test ads.
 #if UNITY_ANDROID
-    private string _adUnitId = "ca-app-pub-3940256099942544/1033173712";
+    private string _adUnitId = "ca-app-pub-3940256099942544~1033173712";
+    //ca-app-pub-1294444334428285~4792466878 - Main Android ID
+    //ca-app-pub-3940256099942544~1033173712 - Test ID
 #elif UNITY_IPHONE
-  private string _adUnitId = "ca-app-pub-1294444334428285/5832991890";
+  private string _adUnitId = "ca-app-pub-1294444334428285~5832991890";
 #else
   private string _adUnitId = "unused";
 #endif
@@ -63,15 +65,9 @@ public class AdManager : MonoBehaviour
     {
         string bundleIdentifier = Application.identifier;
 
-        if (bundleIdentifier.Contains("staging"))
+        if (Application.isEditor)
         {
-            _adUnitId = "ca-app-pub-3940256099942544/1033173712";
-            Debug.Log(bundleIdentifier);
-        }
-        else if (bundleIdentifier.Contains("production"))
-        {
-            _adUnitId = "ca-app-pub-1294444334428285~4792466878";
-            Debug.Log(bundleIdentifier);
+            _adUnitId = "ca-app-pub-3940256099942544~1033173712";
         }
         else
         {

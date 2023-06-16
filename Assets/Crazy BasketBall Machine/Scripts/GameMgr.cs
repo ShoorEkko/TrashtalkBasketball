@@ -153,8 +153,8 @@ public class GameMgr : MonoBehaviour {
 
 		//show full ad here
 		AdManager.Instance.LoadInterstitialAd();
-		AdManager.Instance.ShowAd();
 		yield return new WaitForSeconds(0.5f);
+		AdManager.Instance.ShowAd();
 	}
 
 	IEnumerator  PrepareLevelUP (){
