@@ -66,10 +66,12 @@ public class AdManager : MonoBehaviour
         if (bundleIdentifier.Contains("staging"))
         {
             _adUnitId = "ca-app-pub-3940256099942544/1033173712";
+            Debug.Log(bundleIdentifier);
         }
         else if (bundleIdentifier.Contains("production"))
         {
             _adUnitId = "ca-app-pub-1294444334428285~4792466878";
+            Debug.Log(bundleIdentifier);
         }
         else
         {
