@@ -41,6 +41,7 @@ public class GameMgr : MonoBehaviour {
 
 	public GameObject bounsshotPanel;
 	public GameObject comboPanel;
+	public GameObject tutorialPanel;
 
 
 
@@ -57,7 +58,8 @@ public class GameMgr : MonoBehaviour {
 	public int[] targettime; //The time of each level. You must reach the target score within the giving time in each level.
 	
 	public bool hidefakeball=false;
-	
+	public bool isTutorialMode=true;
+
 	[HideInInspector] public int currentlevel=0;
 
 	private bool istimeout=false;
@@ -68,6 +70,7 @@ public class GameMgr : MonoBehaviour {
 	private bool iscombopanelshowed=false;
 
 	private AutoMoveAndRotate goalholderscript;
+	
 
 
 
@@ -77,7 +80,6 @@ public class GameMgr : MonoBehaviour {
 		Application.targetFrameRate = 60;
 		Time.timeScale = 1;
 		istimeout=false;;
-
 
 		leveltext.text = "Level: " + (currentlevel + 1).ToString ();
 
@@ -89,56 +91,63 @@ public class GameMgr : MonoBehaviour {
 		bestscoretext.text = "Best: " + best.ToString ();
 		goalholderscript = GoalHolder.GetComponent<AutoMoveAndRotate> ();
 
-		TrashtalkManager.Instance.OnStart();
+		if(!isTutorialMode)TrashtalkManager.Instance.OnStart();
+		SetupTutorial();
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
-        if (!istimeout) {
-			_timeRemaining -= Time.deltaTime; 
-		
-			// accumulate elapsed time 
-			_timeUpdateElapsedTime += Time.deltaTime; 
-		
-			// has a second past? 
-			if (_timeUpdateElapsedTime >= 1.0f) {
-				TimeRemaining = _timeRemaining; 
-			}
-
-
-			if (_timeRemaining <= 0.0f) {
-
-				istimeout=true;
-
-				TimeRemaining=0;
-
-				if (score >= targetscore [currentlevel])
-					PlaylastBounsShot ();
-				else
-					Gameover ();
-
-				if(iscombopanelshowed)
-				{comboPanel.SetActive (false);
-					iscombopanelshowed=false;
-					combo=0;
-				}
-				
-			}
-
-
-			if(combo>0)
+        if (!isTutorialMode) {
+			if (!istimeout)
 			{
-				comboProcess.fillAmount=comboProcess.fillAmount-Time.deltaTime*0.3f;
-				if(comboProcess.fillAmount<=0)
-				{
-					if(iscombopanelshowed)
-					{comboPanel.SetActive (false);
-						iscombopanelshowed=false;
-					}
-					combo=0;
+				_timeRemaining -= Time.deltaTime;
 
+				// accumulate elapsed time 
+				_timeUpdateElapsedTime += Time.deltaTime;
+
+				// has a second past? 
+				if (_timeUpdateElapsedTime >= 1.0f)
+				{
+					TimeRemaining = _timeRemaining;
+				}
+
+
+				if (_timeRemaining <= 0.0f)
+				{
+
+					istimeout = true;
+
+					TimeRemaining = 0;
+
+					if (score >= targetscore[currentlevel])
+						PlaylastBounsShot();
+					else
+						Gameover();
+
+					if (iscombopanelshowed)
+					{
+						comboPanel.SetActive(false);
+						iscombopanelshowed = false;
+						combo = 0;
+					}
+
+				}
+
+
+				if (combo > 0)
+				{
+					comboProcess.fillAmount = comboProcess.fillAmount - Time.deltaTime * 0.3f;
+					if (comboProcess.fillAmount <= 0)
+					{
+						if (iscombopanelshowed)
+						{
+							comboPanel.SetActive(false);
+							iscombopanelshowed = false;
+						}
+						combo = 0;
+
+					}
 				}
 			}
 
@@ -464,6 +473,32 @@ public class GameMgr : MonoBehaviour {
 		comboPanel.SetActive (false);
 
 		iscombopanelshowed=false;
+	}
+
+	private void SetupTutorial()
+    {
+        if (!PlayerPrefs.HasKey("IsDoneTutorial"))
+        {
+			isTutorialMode = true;
+			Time.timeScale = 0;
+			tutorialPanel.SetActive(true);
+			PlayerPrefs.SetInt("IsDoneTutorial", 0);
+        }
+        else
+        {
+			isTutorialMode = false;
+			tutorialPanel.SetActive(false);
+		}
+		
+    }
+	public void TutorialDone()
+    {
+		isTutorialMode = false;
+		tutorialPanel.SetActive(false);
+	}
+	public void LastTutorial()
+	{
+		TrashtalkManager.Instance.OnLastTutorial();
 	}
 
 }

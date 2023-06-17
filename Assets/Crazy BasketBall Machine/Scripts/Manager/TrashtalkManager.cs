@@ -47,14 +47,14 @@ public class TrashtalkManager : MonoBehaviour
         get { return instance; }
     }
 
-    public void OnStart()
+    public IEnumerator OnStart()
     {
         for (int i = 0; i < m_VideoPlayer.Length; i++)
         {
             m_VideoPlayer[i].gameObject.SetActive(false);
         }
-
-        m_Trashtalk();
+        yield return new WaitForSeconds(0.3f);
+        if (!m_GameMgr.isTutorialMode)m_Trashtalk();
     }
 
     public void OnMiss()
@@ -68,6 +68,18 @@ public class TrashtalkManager : MonoBehaviour
         if (m_Trashtalk != null)
             m_Trashtalk();
     }
+
+    public void OnLastTutorial()
+    {
+        for (int i = 0; i < m_VideoPlayer.Length; i++)
+        {
+            m_VideoPlayer[i].gameObject.SetActive(true);
+            m_VideoPlayer[0].SetDirectAudioVolume(0, 0); // Disable audio from video player 1
+            m_VideoPlayer[i].Play();
+        }
+    }
+
+
 
     void PlayRandomTrashtalk()
     {
