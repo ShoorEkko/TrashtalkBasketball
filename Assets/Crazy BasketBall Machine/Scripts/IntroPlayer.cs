@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 public class IntroPlayer : MonoBehaviour
 {
     [SerializeField] VideoPlayer m_VideoPlayer;
-
     // Start is called before the first frame update
     void Start()
     {
