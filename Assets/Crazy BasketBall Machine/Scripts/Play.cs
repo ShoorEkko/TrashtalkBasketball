@@ -7,7 +7,8 @@ public class Play : MonoBehaviour
 {
 	public void playgame()
 	{
-		ScenePreloader.Instance.PlayButtonClicked();
+		//ScenePreloader.Instance.PlayButtonClicked();
+		SceneManager.LoadScene("game");
 	}
 
 
