@@ -5,6 +5,7 @@ using UnityEngine;
 public class IntroDelay : MonoBehaviour
 {
     [SerializeField] GameObject m_Loading;
+    [SerializeField] GameObject m_Music;
 
     private void Start()
     {
@@ -17,5 +18,6 @@ public class IntroDelay : MonoBehaviour
         m_Loading.SetActive(true);
         yield return new WaitForSeconds(3f);
         m_Loading.SetActive(false);
+        m_Music.SetActive(true);
     }
 }
