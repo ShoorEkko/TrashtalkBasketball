@@ -19,6 +19,6 @@ public class IntroPlayer : MonoBehaviour
     // Event handler for the loopPointReached event
     void OnVideoFinished(VideoPlayer videoPlayer)
     {
-        SceneManager.LoadScene("start");
+        SceneManager.LoadScene(1);
     }
 }

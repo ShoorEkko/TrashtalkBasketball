@@ -5,12 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class Play : MonoBehaviour 
 {
-	[SerializeField] ScenePreloader scenePreloader;
-
-
 	public void playgame()
 	{
-		scenePreloader.PlayButtonClicked();
+		ScenePreloader.Instance.PlayButtonClicked();
 	}
 
 
