@@ -156,14 +156,9 @@ public class GameMgr : MonoBehaviour {
 
 
 	IEnumerator  PrepareGameoverAD (){
-		
-		
 		gameoverPanel.SetActive (true);
-
-		//show full ad here
-		AdManager.Instance.LoadInterstitialAd();
 		yield return new WaitForSeconds(0.5f);
-		AdManager.Instance.ShowAd();
+		AdManager.instance.ShowAd();
 	}
 
 	IEnumerator  PrepareLevelUP (){
