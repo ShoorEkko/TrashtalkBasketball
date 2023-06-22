@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: fdd86f28e80856a489d7ea0434d356fe
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Bristol
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 8370db422b2dca8419783f48608b00dd, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
