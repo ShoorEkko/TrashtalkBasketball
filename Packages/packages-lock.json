@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.github.asus4.tflite": {
+      "version": "https://github.com/asus4/tf-lite-unity-sample.git?path=/Packages/com.github.asus4.tflite",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "6938ac7093f42b640aa04914a31f2e035822577c"
+    },
     "com.unity.collab-proxy": {
       "version": "1.17.7",
       "depth": 0,
